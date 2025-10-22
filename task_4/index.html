@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ru">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Фильтр сделок</title>
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
+		<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	</head>
+	<body>
+
+		<div class="container mt-5">
+
+			<h1>Список сделок</h1>
+
+			<div class="mb-3">
+				<label for="status-filter" class="form-label">Фильтр по статусу:</label>
+				<select id="status-filter" class="form-select">
+					<option value="">Все</option>
+					<option value="WON">WON</option>
+					<option value="LOSE">LOSE</option>
+				</select>
+			</div>
+
+			<table id="deals-table" class="table table-striped">
+				<thead>
+					<tr>
+						<th>ID</th>
+						<th>Название</th>
+						<th>Статус</th>
+						<th>Сумма</th>
+					</tr>
+				</thead>
+				<tbody>
+
+				</tbody>
+			</table>
+		</div>
+
+		<script>
+			$(document).ready(function() {
+				$.getJSON('mock_deals.json', function(data) {
+					data.forEach(function(deal) {
+						$('#deals-table tbody').append(`
+		          <tr>
+		            <td>${deal.id}</td>
+		            <td>${deal.title}</td>
+		            <td>${deal.status}</td>
+		            <td>${deal.amount}</td>
+		          </tr>
+		        `);
+					});
+				});
+
+				$('#status-filter').on('change', function() {
+					let selectedStatus = $(this).val();
+					let rows = $('#deals-table tbody tr');
+
+					if (selectedStatus === '') {
+						rows.show();
+					} else {
+						rows.each(function() {
+							let status = $(this).find('td:eq(2)').text();
+							if (status === selectedStatus) {
+								$(this).show();
+							} else {
+								$(this).hide();
+							}
+						});
+					}
+				});
+			});
+		</script>
+	</body>
+</html>
